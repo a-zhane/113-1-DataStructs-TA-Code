@@ -1,0 +1,98 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class quadraticEq {
+private:
+    double a, b, c;
+
+public:
+    // Constructors
+    quadraticEq() : a(0), b(0), c(0) {}  // Default constructor
+    quadraticEq(double A, double B, double C) : a(A), b(B), c(C) {} // Parameterized constructor
+
+    // Function to calculate discriminant
+    double discriminant() const {
+        return b * b - 4 * a * c;
+    }
+
+    // Function to determine the type of roots and print them
+    void printRoots() const {
+        double disc = discriminant();
+        if (disc > 0) {
+            double root1 = (-b + sqrt(disc)) / (2 * a);
+            double root2 = (-b - sqrt(disc)) / (2 * a);
+            cout << "Two real roots: " << root1 << " and " << root2 << endl;
+        } else if (disc == 0) {
+            double root = -b / (2 * a);
+            cout << "Single repeated root: " << root << endl;
+        } else {
+            double realPart = -b / (2 * a);
+            double imagPart = sqrt(-disc) / (2 * a);
+            cout << "Two complex roots: " << realPart << " + " << imagPart << "i and "
+                 << realPart << " - " << imagPart << "i" << endl;
+        }
+    }
+
+    // Overload + operator to add coefficients
+    quadraticEq operator+(const quadraticEq &eq) const {
+        return quadraticEq(a + eq.a, b + eq.b, c + eq.c);
+    }
+
+    // Overload - operator to subtract coefficients
+    quadraticEq operator-(const quadraticEq &eq) const {
+        return quadraticEq(a - eq.a, b - eq.b, c - eq.c);
+    }
+
+    // Overload == operator to compare two equations
+    bool operator==(const quadraticEq &eq) const {
+        return a == eq.a && b == eq.b && c == eq.c;
+    }
+
+    // Overload != operator to check if two equations are different
+    bool operator!=(const quadraticEq &eq) const {
+        return !(*this == eq);
+    }
+
+    // Overload stream insertion operator for output
+    friend ostream &operator<<(ostream &out, const quadraticEq &eq) {
+        out << eq.a << "x^2 + " << eq.b << "x + " << eq.c;
+        return out;
+    }
+
+    // Overload stream extraction operator for input
+    friend istream &operator>>(istream &in, quadraticEq &eq) {
+        cout << "Enter coefficients a, b, and c: ";
+        in >> eq.a >> eq.b >> eq.c;
+        return in;
+    }
+};
+
+// Main program to test the class
+int main() {
+    quadraticEq eq1(1, -3, 2); // Example equation: x^2 - 3x + 2 = 0
+    cout << "Equation 1: " << eq1 << endl;
+    eq1.printRoots();
+
+    quadraticEq eq2;
+    cout << "Enter Equation 2: ";
+    cin >> eq2;
+    cout << "Equation 2: " << eq2 << endl;
+    eq2.printRoots();
+
+    // Test addition and subtraction
+    quadraticEq sum = eq1 + eq2;
+    cout << "Sum of equations: " << sum << endl;
+
+    quadraticEq diff = eq1 - eq2;
+    cout << "Difference of equations: " << diff << endl;
+
+    // Test equality and inequality
+    if (eq1 == eq2) {
+        cout << "Equation 1 is equal to Equation 2" << endl;
+    } else {
+        cout << "Equation 1 is not equal to Equation 2" << endl;
+    }
+
+    return 0;
+}
